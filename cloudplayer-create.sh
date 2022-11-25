@@ -21,7 +21,7 @@ do
             \"idleTimeout\": 60,
             \"name\": \"multichan-poc-${value}-video\"
         }
-    }" | grep "id" | awk -F '"id":' '{print $2}' | cut -d "," -f1 | cut -d '"' -f2 &
+    }" | grep "id" | awk -F '"id":' '{print $2}' | cut -d "," -f1 | cut -d '"' -f2 | awk -v userid="${uid}" '{print "A " userid " " $0}' &
 done
 
 wait
@@ -39,7 +39,7 @@ do
     stream_delay=2
     unset delay
     uid=$((2000+value))
-    delay=$((current_time+value*stream_delay))
+    delay=$((current_time+5+value*stream_delay))
 
     curl --request POST \
     --url https://api.agora.io/na/v1/projects/${app_id}/cloud-player/players \
@@ -54,7 +54,7 @@ do
             \"name\": \"multichan-poc-${value}-audio\",
             \"playTs\": ${delay}
         }
-    }" | grep "id" | awk -F '"id":' '{print $2}' | cut -d "," -f1 | cut -d '"' -f2 &
+    }" | grep "id" | awk -F '"id":' '{print $2}' | cut -d "," -f1 | cut -d '"' -f2 | awk -v userid="${uid}" '{print "B " userid " " $0}' &
 done
 
 wait
